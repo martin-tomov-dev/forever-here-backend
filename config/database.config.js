@@ -9,18 +9,6 @@ const connection = mysql.createPool({
   port: 3306,
 });
 
-connection.connect((err) => {
-  if (err) {
-    console.error("Error connecting to MySQL:", err);
-    return;
-  }
-
-  console.log("Connected to MySQL database!");
-  // Perform your database operations here
-
-  connection.end();
-});
-
 module.exports = {
   host: process.env.DB_HOST,
   database: process.env.DB_DATABASE,
