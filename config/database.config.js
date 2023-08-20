@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 require("dotenv").config();
-const connectionLog = mysql.createPool({
+const connection = mysql.createPool({
   connectionLimit: 10,
   host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
@@ -8,7 +8,18 @@ const connectionLog = mysql.createPool({
   database: process.env.DB_DATABASE,
   port: 3306,
 });
-console.log(connectionLog);
+
+connection.connect((err) => {
+  if (err) {
+    console.error("Error connecting to MySQL:", err);
+    return;
+  }
+
+  console.log("Connected to MySQL database!");
+  // Perform your database operations here
+
+  connection.end();
+});
 
 module.exports = {
   host: process.env.DB_HOST,
