@@ -30,28 +30,6 @@ exports.sendMessage = async (req, res, next) => {
       html: "hiii!!!",
     });
 
-    const exist_forgotUser = await prisma.forgotPassword.findFirst({
-      where: { OR: [{ email }] },
-    });
-    if (exist_forgotUser) {
-      await prisma.forgotPassword.update({
-        where: { email: email },
-        data: {
-          email,
-          passcode,
-          updated_date,
-        },
-      });
-    } else {
-      await prisma.forgotPassword.create({
-        data: {
-          email,
-          passcode,
-          updated_date,
-        },
-      });
-    }
-
     res.status(StatusCodes.OK).json("Please check the email box");
   } catch (error) {
     return next({
