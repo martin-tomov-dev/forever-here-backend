@@ -18,6 +18,7 @@ module.exports = {
     date_birth: Joi.string(),
     date_passing: Joi.string(),
     mobile_number: Joi.string(),
+    user_type: Joi.string(),
     email: Joi.string().email().required(),
     password: Joi.string().min(8).max(16).required().external(validatePassword),
   }),
