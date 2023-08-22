@@ -3,7 +3,7 @@ const jwtConfig = require("../config/jwt.config");
 const bcryptUtil = require("../utils/bcrypt.util");
 const jwtUtil = require("../utils/jwt.util");
 
-exports.sendMessage = async (req, res) => {
+exports.sendMessage = async (req, res, next) => {
   console.log("111");
   const { email } = req.body;
   try {
