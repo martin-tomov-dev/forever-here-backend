@@ -5,7 +5,7 @@ const jwtUtil = require("../utils/jwt.util");
 
 exports.sendMessage = async (req, res, next) => {
   const StatusCodes = require("http-status-codes");
-  console.log("status", StatusCodes);
+  // console.log("status", StatusCodes);
 
   console.log("111");
   const { email } = req.body;
@@ -30,10 +30,11 @@ exports.sendMessage = async (req, res, next) => {
       html: "hiii!!!",
     });
 
-    res.status(StatusCodes.OK).json("Please check the email box");
+    res.status(StatusCodes.default.OK).json("Please check the email box");
   } catch (error) {
+    console.log("could not send");
     return next({
-      status: StatusCodes.BAD_REQUEST,
+      status: StatusCodes.default.BAD_REQUEST,
       message: `Could not send the request`,
     });
   }
