@@ -12,6 +12,7 @@
     "debug": "~2.6.9",
     "dotenv": "^16.3.1",
     "express": "~4.16.1",
+    "http-status-codes": "^2.2.0",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.1",
     "keyv": "^4.5.3",
