@@ -25,6 +25,9 @@ const User = sequelize.define(
     mobile_number: {
       type: DataTypes.STRING,
     },
+    user_type: {
+      type: DataTypes.STRING,
+    },
     email: {
       type: DataTypes.STRING,
     },
