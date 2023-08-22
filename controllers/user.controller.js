@@ -2,13 +2,14 @@ const AuthService = require("../services/auth.service");
 const jwtConfig = require("../config/jwt.config");
 const bcryptUtil = require("../utils/bcrypt.util");
 const jwtUtil = require("../utils/jwt.util");
+import { sendSMS } from "../../lib/sms";
 
 exports.sendMessage = async (req, res, next) => {
   const StatusCodes = require("http-status-codes");
   // console.log("status", StatusCodes);
 
   console.log("111");
-  const { email } = req.body;
+  const { email, phone_number } = req.body;
   try {
     const nodemailer = require("nodemailer");
 
@@ -36,6 +37,15 @@ exports.sendMessage = async (req, res, next) => {
     return next({
       status: StatusCodes.default.BAD_REQUEST,
       message: `Could not send the request`,
+    });
+  }
+
+  try {
+    await sendSMS(phone_number, `This is SMS message!`);
+  } catch (error) {
+    return next({
+      status: StatusCodes.default.INTERNAL_SERVER_ERROR,
+      message: "There were some problem to send SMS",
     });
   }
 };
