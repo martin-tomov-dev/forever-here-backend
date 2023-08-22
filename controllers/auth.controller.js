@@ -19,6 +19,7 @@ exports.register = async (req, res) => {
     date_birth: req.body.date_birth,
     date_passing: req.body.date_passing,
     mobile_number: req.body.mobile_number,
+    user_type: req.body.user_type,
     email: req.body.email,
     password: hashedPassword,
   };
