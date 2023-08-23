@@ -34,6 +34,7 @@ exports.sendMessage = async (req, res, next) => {
     try {
       await sendSMS(phone_number, `This is SMS message!`);
     } catch (error) {
+      console.log("sms error------>", error);
       return next({
         status: StatusCodes.default.INTERNAL_SERVER_ERROR,
         message: "There were some problem to send SMS",
