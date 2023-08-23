@@ -2,13 +2,11 @@ const AuthService = require("../services/auth.service");
 const jwtConfig = require("../config/jwt.config");
 const bcryptUtil = require("../utils/bcrypt.util");
 const jwtUtil = require("../utils/jwt.util");
-const sendSMS = require("../lib/sms");
+const sms = require("../lib/sms");
 
 exports.sendMessage = async (req, res, next) => {
   const StatusCodes = require("http-status-codes");
-  // console.log("status", StatusCodes);
 
-  console.log("111");
   const { email, phone_number } = req.body;
   try {
     const nodemailer = require("nodemailer");
@@ -32,7 +30,7 @@ exports.sendMessage = async (req, res, next) => {
     });
 
     try {
-      await sendSMS(phone_number, `This is SMS message!`);
+      await sms.sendSMSsendSMS(phone_number, `This is SMS message!`);
     } catch (error) {
       console.log("sms error------>", error);
       return next({
