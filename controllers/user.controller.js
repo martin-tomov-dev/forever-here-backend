@@ -30,7 +30,7 @@ exports.sendMessage = async (req, res, next) => {
     });
 
     try {
-      await sms.sendSMSsendSMS(phone_number, `This is SMS message!`);
+      await sms.sendSMS(phone_number, `This is SMS message!`);
     } catch (error) {
       console.log("sms error------>", error);
       return next({
