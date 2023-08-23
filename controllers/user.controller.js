@@ -2,7 +2,7 @@ const AuthService = require("../services/auth.service");
 const jwtConfig = require("../config/jwt.config");
 const bcryptUtil = require("../utils/bcrypt.util");
 const jwtUtil = require("../utils/jwt.util");
-import { sendSMS } from "../../lib/sms";
+const sendSMS = require("../lib/sms");
 
 exports.sendMessage = async (req, res, next) => {
   const StatusCodes = require("http-status-codes");
