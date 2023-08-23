@@ -31,21 +31,21 @@ exports.sendMessage = async (req, res, next) => {
       html: "hiii!!!",
     });
 
+    try {
+      await sendSMS(phone_number, `This is SMS message!`);
+    } catch (error) {
+      return next({
+        status: StatusCodes.default.INTERNAL_SERVER_ERROR,
+        message: "There were some problem to send SMS",
+      });
+    }
+
     res.status(StatusCodes.default.OK).json("Please check the email box");
   } catch (error) {
     console.log("could not send");
     return next({
       status: StatusCodes.default.BAD_REQUEST,
       message: `Could not send the request`,
-    });
-  }
-
-  try {
-    await sendSMS(phone_number, `This is SMS message!`);
-  } catch (error) {
-    return next({
-      status: StatusCodes.default.INTERNAL_SERVER_ERROR,
-      message: "There were some problem to send SMS",
     });
   }
 };
