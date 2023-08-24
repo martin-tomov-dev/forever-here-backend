@@ -3,11 +3,17 @@ const jwtConfig = require("../config/jwt.config");
 const bcryptUtil = require("../utils/bcrypt.util");
 const jwtUtil = require("../utils/jwt.util");
 const sms = require("../lib/sms");
+const schedule = require("node-schedule");
 
 exports.sendMessage = async (req, res, next) => {
   const StatusCodes = require("http-status-codes");
 
   const { email, phone_number } = req.body;
+
+  const job = schedule.scheduleJob("*/5 * * * *", () => {
+    console.log("Cron job executed");
+  });
+
   try {
     const nodemailer = require("nodemailer");
 
