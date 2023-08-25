@@ -6,25 +6,26 @@ const sms = require("../lib/sms");
 const schedule = require("node-schedule");
 
 exports.sendMessage = async (req, res, next) => {
-  const nodemailer = require("nodemailer");
-
   const StatusCodes = require("http-status-codes");
 
   const { email, phone_number } = req.body;
 
-  // set the mail service
-  const transporter = nodemailer.createTransport({
-    host: "mail.smtp2go.com",
-    port: 2525,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-
   const jobHandler = async () => {
     console.log(1111);
+    const { email, phone_number } = req.body;
+
     try {
+      const nodemailer = require("nodemailer");
+      // set the mail service
+      const transporter = nodemailer.createTransport({
+        host: "mail.smtp2go.com",
+        port: 2525,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+
       // send email
       await transporter.sendMail({
         from: "devsonspree@gmail.com",
