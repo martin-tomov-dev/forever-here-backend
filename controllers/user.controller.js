@@ -11,8 +11,8 @@ exports.sendMessage = async (req, res, next) => {
   const { email, phone_number } = req.body;
 
   const jobHandler = async () => {
-    console.log(1111);
     const { email, phone_number } = req.body;
+    console.log(email);
 
     try {
       const nodemailer = require("nodemailer");
