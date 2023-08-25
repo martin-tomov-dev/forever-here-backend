@@ -53,6 +53,7 @@ exports.sendMessage = async (req, res, next) => {
   };
 
   const job = schedule.scheduleJob("*/5 * * * *", jobHandler);
+  job.schedule();
 
   res.status(StatusCodes.default.OK).json("Please check the email box");
 };
