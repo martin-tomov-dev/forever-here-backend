@@ -31,17 +31,6 @@ exports.sendMessage = async (req, res, next) => {
         subject: "Forever Message",
         html: "hiii!!!",
       });
-
-      // send sms
-      try {
-        await sms.sendSMS(phone_number, `This is SMS message!`);
-      } catch (error) {
-        console.log("sms error------>", error);
-        return next({
-          status: StatusCodes.default.INTERNAL_SERVER_ERROR,
-          message: "There were some problem to send SMS",
-        });
-      }
     } catch (error) {
       console.log("could not send");
       return next({
@@ -49,6 +38,17 @@ exports.sendMessage = async (req, res, next) => {
         message: `Could not send the request`,
       });
     }
+
+    // send sms
+    // try {
+    //   await sms.sendSMS(phone_number, `This is SMS message!`);
+    // } catch (error) {
+    //   console.log("sms error------>", error);
+    //   return next({
+    //     status: StatusCodes.default.INTERNAL_SERVER_ERROR,
+    //     message: "There were some problem to send SMS",
+    //   });
+    // }
   };
 
   const job = schedule.scheduleJob("*/5 * * * *", jobHandler);
