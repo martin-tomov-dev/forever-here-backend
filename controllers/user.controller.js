@@ -23,6 +23,7 @@ exports.sendMessage = async (req, res, next) => {
   });
 
   const jobHandler = async () => {
+    console.log(1111);
     try {
       // send email
       await transporter.sendMail({
@@ -40,25 +41,18 @@ exports.sendMessage = async (req, res, next) => {
     }
 
     // send sms
-    // try {
-    //   await sms.sendSMS(phone_number, `This is SMS message!`);
-    // } catch (error) {
-    //   console.log("sms error------>", error);
-    //   return next({
-    //     status: StatusCodes.default.INTERNAL_SERVER_ERROR,
-    //     message: "There were some problem to send SMS",
-    //   });
-    // }
+    try {
+      await sms.sendSMS(phone_number, `This is SMS message!`);
+    } catch (error) {
+      console.log("sms error------>", error);
+      return next({
+        status: StatusCodes.default.INTERNAL_SERVER_ERROR,
+        message: "There were some problem to send SMS",
+      });
+    }
   };
 
   const job = schedule.scheduleJob("*/5 * * * *", jobHandler);
-  console.log("job----->", job);
-  job
-    .then((res) => {
-      console.log("sucess");
-      res.status(StatusCodes.default.OK).json("Please check the email box");
-    })
-    .catch(() => {
-      console.log("error");
-    });
+
+  res.status(StatusCodes.default.OK).json("Please check the email box");
 };
