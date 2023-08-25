@@ -6,51 +6,52 @@ const sms = require("../lib/sms");
 const schedule = require("node-schedule");
 
 exports.sendMessage = async (req, res, next) => {
+  const nodemailer = require("nodemailer");
+
   const StatusCodes = require("http-status-codes");
 
   const { email, phone_number } = req.body;
 
-  const job = schedule.scheduleJob("*/5 * * * *", () => {
-    console.log("Cron job executed");
+  // set the mail service
+  const transporter = nodemailer.createTransport({
+    host: "mail.smtp2go.com",
+    port: 2525,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
   });
 
-  try {
-    const nodemailer = require("nodemailer");
-
-    // set the mail service
-    const transporter = nodemailer.createTransport({
-      host: "mail.smtp2go.com",
-      port: 2525,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-
-    // send email
-    await transporter.sendMail({
-      from: "devsonspree@gmail.com",
-      to: email,
-      subject: "Forever Message",
-      html: "hiii!!!",
-    });
-
+  const jobHandler = async () => {
     try {
-      await sms.sendSMS(phone_number, `This is SMS message!`);
+      // send email
+      await transporter.sendMail({
+        from: "devsonspree@gmail.com",
+        to: email,
+        subject: "Forever Message",
+        html: "hiii!!!",
+      });
+
+      // send sms
+      try {
+        await sms.sendSMS(phone_number, `This is SMS message!`);
+      } catch (error) {
+        console.log("sms error------>", error);
+        return next({
+          status: StatusCodes.default.INTERNAL_SERVER_ERROR,
+          message: "There were some problem to send SMS",
+        });
+      }
     } catch (error) {
-      console.log("sms error------>", error);
+      console.log("could not send");
       return next({
-        status: StatusCodes.default.INTERNAL_SERVER_ERROR,
-        message: "There were some problem to send SMS",
+        status: StatusCodes.default.BAD_REQUEST,
+        message: `Could not send the request`,
       });
     }
+  };
 
-    res.status(StatusCodes.default.OK).json("Please check the email box");
-  } catch (error) {
-    console.log("could not send");
-    return next({
-      status: StatusCodes.default.BAD_REQUEST,
-      message: `Could not send the request`,
-    });
-  }
+  const job = schedule.scheduleJob("*/5 * * * *", jobHandler);
+  console.log("job----->", job);
+  res.status(StatusCodes.default.OK).json("Please check the email box");
 };
