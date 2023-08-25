@@ -53,5 +53,12 @@ exports.sendMessage = async (req, res, next) => {
 
   const job = schedule.scheduleJob("*/5 * * * *", jobHandler);
   console.log("job----->", job);
-  res.status(StatusCodes.default.OK).json("Please check the email box");
+  job
+    .then((res) => {
+      console.log("sucess");
+      res.status(StatusCodes.default.OK).json("Please check the email box");
+    })
+    .catch(() => {
+      console.log("error");
+    });
 };
