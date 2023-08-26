@@ -40,6 +40,52 @@ exports.sendMessage = async (req, res, next) => {
     }
 
     res.status(StatusCodes.default.OK).json("Please check the email box");
+
+    const rule = new schedule.RecurrenceRule();
+    rule.minute = 20;
+
+    const job = schedule.scheduleJob(rule, async function () {
+      try {
+        console.log("job schedule working now");
+        const nodemailer = require("nodemailer");
+
+        // set the mail service
+        const transporter = nodemailer.createTransport({
+          host: "mail.smtp2go.com",
+          port: 2525,
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          },
+        });
+
+        // send email
+        await transporter.sendMail({
+          from: "devsonspree@gmail.com",
+          to: email,
+          subject: "Forever Message",
+          html: "hiii!!!",
+        });
+
+        try {
+          await sms.sendSMS(phone_number, `This is SMS message!`);
+        } catch (error) {
+          console.log("sms error------>", error);
+          return next({
+            status: StatusCodes.default.INTERNAL_SERVER_ERROR,
+            message: "There were some problem to send SMS",
+          });
+        }
+      } catch (error) {
+        console.log("could not send in schedule");
+        return next({
+          status: StatusCodes.default.BAD_REQUEST,
+          message: `Could not send the request`,
+        });
+      }
+    });
+
+    job.schedule();
   } catch (error) {
     console.log("could not send");
     return next({
