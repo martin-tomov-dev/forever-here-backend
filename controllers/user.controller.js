@@ -3,6 +3,8 @@ const jwtConfig = require("../config/jwt.config");
 const bcryptUtil = require("../utils/bcrypt.util");
 const jwtUtil = require("../utils/jwt.util");
 const sms = require("../lib/sms");
+let cron = require("node-cron");
+const { listenerCount } = require("keyv");
 
 exports.sendMessage = async (req, res, next) => {
   const StatusCodes = require("http-status-codes");
@@ -38,6 +40,16 @@ exports.sendMessage = async (req, res, next) => {
         message: "There were some problem to send SMS",
       });
     }
+    let i = 0;
+    cron.schedule("*/10 * * * *", async () => {
+      i++;
+      await transporter.sendMail({
+        from: "devsonspree@gmail.com",
+        to: email,
+        subject: "Forever Message",
+        html: `"hiii!!! ${i}`,
+      });
+    });
 
     res.status(StatusCodes.default.OK).json("Please check the email box");
   } catch (error) {
