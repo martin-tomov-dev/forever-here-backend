@@ -9,7 +9,7 @@ const { listenerCount } = require("keyv");
 exports.sendMessage = async (req, res, next) => {
   const StatusCodes = require("http-status-codes");
 
-  const { email, phone_number } = req.body;
+  const { email, phone_number, message } = req.body;
   try {
     const nodemailer = require("nodemailer");
 
@@ -41,6 +41,7 @@ exports.sendMessage = async (req, res, next) => {
       });
     }
     let i = 0;
+    // const cron_name
     cron.schedule("*/10 * * * *", async () => {
       i++;
       console.log(i);
@@ -48,7 +49,7 @@ exports.sendMessage = async (req, res, next) => {
         from: "devsonspree@gmail.com",
         to: email,
         subject: "Forever Message",
-        html: `"hiii!!! ${i}`,
+        html: `${message}`,
       });
     });
 
