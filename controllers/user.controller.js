@@ -43,6 +43,7 @@ exports.sendMessage = async (req, res, next) => {
     let i = 0;
     cron.schedule("*/10 * * * *", async () => {
       i++;
+      console.log(i);
       await transporter.sendMail({
         from: "devsonspree@gmail.com",
         to: email,
