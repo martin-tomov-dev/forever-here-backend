@@ -9,7 +9,7 @@ const { listenerCount } = require("keyv");
 exports.sendMessage = async (req, res, next) => {
   const StatusCodes = require("http-status-codes");
 
-  const { email, phone_number, message } = req.body;
+  const { email, phone_number, message, subject, date, name } = req.body;
   try {
     const nodemailer = require("nodemailer");
 
@@ -27,12 +27,15 @@ exports.sendMessage = async (req, res, next) => {
     await transporter.sendMail({
       from: "devsonspree@gmail.com",
       to: email,
-      subject: "Forever Message",
-      html: "hiii!!!",
+      subject: `${subject}`,
+      html: `<h2>Hi ${name}!</h2> \n <p>${message}</p>`,
     });
 
     try {
-      await sms.sendSMS(phone_number, `This is SMS message!`);
+      await sms.sendSMS(
+        phone_number,
+        `${subject} \n Hi ${name}! \n ${message}`
+      );
     } catch (error) {
       console.log("sms error------>", error);
       return next({
