@@ -9,7 +9,8 @@ const { listenerCount } = require("keyv");
 exports.sendMessage = async (req, res, next) => {
   const StatusCodes = require("http-status-codes");
 
-  const { email, phone_number, message, subject, date, name } = req.body;
+  const { email, phone_number, message, subject, name } = req.body;
+  console.log("data", email, phone_number, message, subject, name);
   try {
     const nodemailer = require("nodemailer");
 
