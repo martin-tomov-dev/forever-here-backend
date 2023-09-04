@@ -19,11 +19,7 @@ router.post(
   ErrorHandler(AuthController.login)
 );
 router.get("/user", AuthGuard, ErrorHandler(AuthController.getUser));
-router.post(
-  "/forever-message",
-  AuthGuard,
-  ErrorHandler(UserController.sendMessage)
-);
+router.post("/forever-message", ErrorHandler(UserController.sendMessage));
 router.get("/logout", AuthGuard, ErrorHandler(AuthController.logout));
 
 // router.all("*", (req, res) =>
