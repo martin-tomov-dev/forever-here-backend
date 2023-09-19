@@ -26,8 +26,15 @@ model Users {
   user_type     String
 }
 
-model Documents {
-  id    Int    @id @unique @default(autoincrement())
-  path  String
-  email String
+model ForeverMessages {
+  id         Int      @id @unique @default(autoincrement())
+  attachment String
+  receiver   String
+  subject    String
+  Message    String
+  email      String
+  mobile     String
+  date       String
+  created_at DateTime
+  updated_at DateTime
 }

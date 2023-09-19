@@ -1,16 +1,36 @@
-const AuthService = require("../services/auth.service");
+const ForeverMessagesServices = require("../services/forever_message.service");
 const jwtConfig = require("../config/jwt.config");
 const bcryptUtil = require("../utils/bcrypt.util");
 const jwtUtil = require("../utils/jwt.util");
 const sms = require("../lib/sms");
 let cron = require("node-cron");
 const { listenerCount } = require("keyv");
+const AWS = require("aws-sdk");
+const { uuid } = require("uuidv4");
+const { prisma } = require("../lib/prisma");
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESSKEYID,
+  secretAccessKey: process.env.AWS_SECRETACCESSKEY,
+  region: process.env.AWS_S3_REGION,
+});
+
+const s3 = new AWS.S3();
 
 exports.sendMessage = async (req, res, next) => {
   const StatusCodes = require("http-status-codes");
 
-  const { email, phone_number, message, subject, name } = req.body;
-  console.log("data", email, phone_number, message, subject, name);
+  const { email, phone_number, message, subject, name, link, date } = req.body;
+  console.log(
+    "data",
+    email,
+    phone_number,
+    message,
+    subject,
+    name,
+    link,
+    date.split("-")
+  );
   try {
     const nodemailer = require("nodemailer");
 
@@ -24,12 +44,12 @@ exports.sendMessage = async (req, res, next) => {
       },
     });
 
-    // send email
+    // //send email
     await transporter.sendMail({
       from: "devsonspree@gmail.com",
       to: email,
       subject: `${subject}`,
-      html: `<h2>Hi ${name}!</h2> \n <p>${message}</p>`,
+      html: `<h2>Hi ${name}!</h2> \n <p>${message}</p> <p>Here is the attachment link ${link}</p>`,
     });
 
     try {
@@ -45,17 +65,34 @@ exports.sendMessage = async (req, res, next) => {
       });
     }
     let i = 0;
-    // const cron_name
-    cron.schedule("*/10 * * * *", async () => {
-      i++;
-      console.log(i);
-      await transporter.sendMail({
-        from: "devsonspree@gmail.com",
-        to: email,
-        subject: "Forever Message",
-        html: `${message}`,
+
+    try {
+      await ForeverMessagesServices.createMessage({
+        attachment: link,
+        receiver: name,
+        subject: subject,
+        Message: message,
+        mobile: phone_number,
+        email: email,
+        date: date,
       });
-    });
+    } catch (error) {
+      console.log("can't create forever message", error);
+    }
+    // const cron_name
+    cron.schedule(
+      `0*0 * 0* ${date.split("-")[1]}* ${date.split("-")[2]}*`,
+      async () => {
+        i++;
+        console.log(i);
+        await transporter.sendMail({
+          from: "devsonspree@gmail.com",
+          to: email,
+          subject: "Forever Message",
+          html: `${message}`,
+        });
+      }
+    );
 
     res.status(StatusCodes.default.OK).json("Please check the email box");
   } catch (error) {
@@ -65,4 +102,26 @@ exports.sendMessage = async (req, res, next) => {
       message: `Could not send the request`,
     });
   }
+};
+
+exports.uploadFile = (req, res, next) => {
+  let keyName = req.file.originalname;
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKETNAME,
+    Key: keyName,
+    Body: req.file.buffer,
+  };
+
+  console.log("uuid", uuid());
+
+  s3.upload(params, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error uploading file");
+    }
+
+    res.send(
+      `https://s3.eu-west-2.amazonaws.com/frontend.forever-here/${keyName}`
+    );
+  });
 };
