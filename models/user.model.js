@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("./connection");
 
 const User = sequelize.define(
-  "users",
+  "User",
   {
     first_name: {
       type: DataTypes.STRING,
@@ -40,4 +40,4 @@ const User = sequelize.define(
     updatedAt: "updated_at",
   }
 );
-module.exports = users;
+module.exports = User;

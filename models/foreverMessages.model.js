@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("./connection");
 
 const ForeverMessages = sequelize.define(
-  "forevermessages",
+  "ForeverMessages",
   {
     attachment: {
       type: DataTypes.STRING,
@@ -31,4 +31,4 @@ const ForeverMessages = sequelize.define(
     updatedAt: "updated_at",
   }
 );
-module.exports = forevermessages;
+module.exports = ForeverMessages;
