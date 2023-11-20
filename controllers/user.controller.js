@@ -84,7 +84,7 @@ exports.sendMessage = async (req, res, next) => {
 
     try {
       cron.schedule(
-        `0 0 ${date.split("-")[1]} ${date.split("-")[2]} *`,
+        `0 0 ${date.split("-")[2]} ${date.split("-")[1]} *`,
         async () => {
           i++;
           console.log(i);
