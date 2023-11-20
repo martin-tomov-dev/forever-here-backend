@@ -59,10 +59,10 @@ exports.sendMessage = async (req, res, next) => {
       );
     } catch (error) {
       console.log("sms error------>", error);
-      return next({
-        status: StatusCodes.default.INTERNAL_SERVER_ERROR,
-        message: "There were some problem to send SMS",
-      });
+      // return next({
+      //   status: StatusCodes.default.INTERNAL_SERVER_ERROR,
+      //   message: "There were some problem to send SMS",
+      // });
     }
     let i = 0;
 
@@ -79,9 +79,10 @@ exports.sendMessage = async (req, res, next) => {
     } catch (error) {
       console.log("can't create forever message", error);
     }
+
     // const cron_name
     cron.schedule(
-      `0*0 * 0* ${date.split("-")[1]}* ${date.split("-")[2]}*`,
+      `0 0 ${date.split("-")[1]}* ${date.split("-")[2]}*`,
       async () => {
         i++;
         console.log(i);
@@ -93,6 +94,8 @@ exports.sendMessage = async (req, res, next) => {
         });
       }
     );
+
+    cron.start();
 
     res.status(StatusCodes.default.OK).json("Please check the email box");
   } catch (error) {
