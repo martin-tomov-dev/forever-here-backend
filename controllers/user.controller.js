@@ -100,7 +100,7 @@ exports.sendMessage = async (req, res, next) => {
       );
     } catch (error) {
       // const cron_name
-      console.log(error);
+      console.log(error + "cron error");
     }
 
     res.status(StatusCodes.default.OK).json("Please check the email box");
