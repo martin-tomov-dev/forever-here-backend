@@ -92,17 +92,19 @@ exports.sendMessage = async (req, res, next) => {
           subject: "Forever Message",
           html: `${message}`,
         });
+      },
+      {
+        scheduled: true,
+        timezone: "Europe/London",
       }
     );
-
-    cron.start();
 
     res.status(StatusCodes.default.OK).json("Please check the email box");
   } catch (error) {
     console.log("could not send");
     return next({
       status: StatusCodes.default.BAD_REQUEST,
-      message: `Could not send the request`,
+      message: `Could not send the request `,
     });
   }
 };
