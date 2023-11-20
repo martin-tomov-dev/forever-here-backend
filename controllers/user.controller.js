@@ -121,7 +121,7 @@ exports.uploadFile = (req, res, next) => {
     }
 
     res.send(
-      `https://s3.eu-west-2.amazonaws.com/frontend.forever-here/${keyName}`
+      `https://s3.eu-west-2.amazonaws.com/front.forever-here/${keyName}`
     );
   });
 };
