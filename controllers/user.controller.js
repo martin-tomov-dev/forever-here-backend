@@ -80,6 +80,8 @@ exports.sendMessage = async (req, res, next) => {
       console.log("can't create forever message", error);
     }
 
+    console.log("-------->date format", date.split("-")[1], date.split("-")[2]);
+
     try {
       cron.schedule(
         `0 0 ${date.split("-")[1]}* ${date.split("-")[2]}*`,
