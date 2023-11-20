@@ -80,24 +80,28 @@ exports.sendMessage = async (req, res, next) => {
       console.log("can't create forever message", error);
     }
 
-    // const cron_name
-    cron.schedule(
-      `0 0 ${date.split("-")[1]}* ${date.split("-")[2]}*`,
-      async () => {
-        i++;
-        console.log(i);
-        await transporter.sendMail({
-          from: "devsonspree@gmail.com",
-          to: email,
-          subject: "Forever Message",
-          html: `${message}`,
-        });
-      },
-      {
-        scheduled: true,
-        timezone: "Europe/London",
-      }
-    );
+    try {
+      cron.schedule(
+        `0 0 ${date.split("-")[1]}* ${date.split("-")[2]}*`,
+        async () => {
+          i++;
+          console.log(i);
+          await transporter.sendMail({
+            from: "devsonspree@gmail.com",
+            to: email,
+            subject: "Forever Message",
+            html: `${message}`,
+          });
+        },
+        {
+          scheduled: true,
+          timezone: "Europe/London",
+        }
+      );
+    } catch (error) {
+      // const cron_name
+      console.log(error);
+    }
 
     res.status(StatusCodes.default.OK).json("Please check the email box");
   } catch (error) {
