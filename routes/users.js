@@ -14,4 +14,6 @@ router.post(
   UserController.uploadFile
 );
 
+router.get("/forever-message/:id", UserController.getMessageById);
+
 module.exports = router;

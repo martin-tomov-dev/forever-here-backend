@@ -8,6 +8,7 @@ const { listenerCount } = require("keyv");
 const AWS = require("aws-sdk");
 const { uuid } = require("uuidv4");
 const { prisma } = require("../lib/prisma");
+const StatusCodes = require("http-status-codes");
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESSKEYID,
@@ -18,8 +19,6 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 exports.sendMessage = async (req, res, next) => {
-  const StatusCodes = require("http-status-codes");
-
   const { email, phone_number, message, subject, name, link, date } = req.body;
   console.log(
     "data",
@@ -45,12 +44,12 @@ exports.sendMessage = async (req, res, next) => {
     });
 
     // //send email
-    await transporter.sendMail({
-      from: "devsonspree@gmail.com",
-      to: email,
-      subject: `${subject}`,
-      html: `<h2>Hi ${name}!</h2> \n <p>${message}</p> <p>Here is the attachment link ${link}</p>`,
-    });
+    // await transporter.sendMail({
+    //   from: "devsonspree@gmail.com",
+    //   to: email,
+    //   subject: `${subject}`,
+    //   html: `<h2>Hi ${name}!</h2> \n <p>${message}</p> <p>Here is the attachment link ${link}</p>`,
+    // });
 
     try {
       await sms.sendSMS(
@@ -65,9 +64,9 @@ exports.sendMessage = async (req, res, next) => {
       // });
     }
     let i = 0;
-
+    const dataId = "";
     try {
-      await ForeverMessagesServices.createMessage({
+      const res = await ForeverMessagesServices.createMessage({
         attachment: link,
         receiver: name,
         subject: subject,
@@ -76,6 +75,8 @@ exports.sendMessage = async (req, res, next) => {
         email: email,
         date: date,
       });
+      dataId = res.dataValues.id;
+      console.log("_________create res", res);
     } catch (error) {
       console.log("can't create forever message", error);
     }
@@ -84,7 +85,7 @@ exports.sendMessage = async (req, res, next) => {
 
     try {
       cron.schedule(
-        `0 0 ${date.split("-")[2]} ${date.split("-")[1]} *`,
+        `0 10 ${date.split("-")[2]} ${date.split("-")[1]} *`,
         async () => {
           i++;
           console.log(i);
@@ -92,7 +93,7 @@ exports.sendMessage = async (req, res, next) => {
             from: "devsonspree@gmail.com",
             to: email,
             subject: "Forever Message",
-            html: `${message}`,
+            html: `Hi there <br> Thanks for using forever message. <br> Please visit below link in the website <br> <a href="http://ec2-18-134-249-109.eu-west-2.compute.amazonaws.com/forever-message-view/${dataId}" />`,
           });
         },
         {
@@ -135,4 +136,18 @@ exports.uploadFile = (req, res, next) => {
       `https://s3.eu-west-2.amazonaws.com/front.forever-here/${keyName}`
     );
   });
+};
+
+exports.getMessageById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const response = await ForeverMessagesServices.getMessageById(id);
+    console.log("response", response[0].dataValues);
+    res.status(StatusCodes.default.OK).json(response[0].dataValues);
+  } catch (error) {
+    return next({
+      status: StatusCodes.default.BAD_REQUEST,
+      message: `Could not send the request `,
+    });
+  }
 };
