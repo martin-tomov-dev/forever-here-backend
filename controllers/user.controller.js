@@ -42,7 +42,7 @@ exports.sendMessage = async (req, res, next) => {
         pass: process.env.SMTP_PASS,
       },
     });
-    const dataId = "";
+    let dataId = "";
 
     try {
       const res = await ForeverMessagesServices.createMessage({
