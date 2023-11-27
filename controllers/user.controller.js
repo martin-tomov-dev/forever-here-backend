@@ -43,12 +43,28 @@ exports.sendMessage = async (req, res, next) => {
       },
     });
 
+    try {
+      const res = await ForeverMessagesServices.createMessage({
+        attachment: link,
+        receiver: name,
+        subject: subject,
+        Message: message,
+        mobile: phone_number,
+        email: email,
+        date: date,
+      });
+      dataId = res.dataValues.id;
+      console.log("_________create res", res);
+    } catch (error) {
+      console.log("can't create forever message", error);
+    }
+
     //send email
     await transporter.sendMail({
       from: "devsonspree@gmail.com",
       to: email,
       subject: `${subject}`,
-      html: `Hi there <br> Thanks for using forever message. <br> Please visit below link in the website <br> <a href="http://ec2-18-134-249-109.eu-west-2.compute.amazonaws.com/forever-message-view/${dataId}" >Please click this link</a>`,
+      html: `<h2>Hi ${name}!</h2> \n <p>${message}</p> Thanks for using forever message. <br> Please visit below link in the website <br> <a href="http://ec2-18-134-249-109.eu-west-2.compute.amazonaws.com/forever-message-view/${dataId}" >Please click this link</a>`,
     });
 
     try {
@@ -65,21 +81,6 @@ exports.sendMessage = async (req, res, next) => {
     }
     let i = 0;
     const dataId = "";
-    try {
-      const res = await ForeverMessagesServices.createMessage({
-        attachment: link,
-        receiver: name,
-        subject: subject,
-        Message: message,
-        mobile: phone_number,
-        email: email,
-        date: date,
-      });
-      dataId = res.dataValues.id;
-      console.log("_________create res", res);
-    } catch (error) {
-      console.log("can't create forever message", error);
-    }
 
     console.log("-------->date format", date.split("-")[1], date.split("-")[2]);
 
