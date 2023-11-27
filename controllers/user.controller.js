@@ -56,13 +56,6 @@ exports.sendMessage = async (req, res, next) => {
       });
       dataId = res.dataValues.id;
       console.log("_________create res", res);
-      //send email
-      await transporter.sendMail({
-        from: "devsonspree@gmail.com",
-        to: email,
-        subject: `${subject}`,
-        html: `<h2>Hi ${name}!</h2> \n <p>${message}</p> Thanks for using forever message. <br> Please visit below link in the website <br> <a href="http://ec2-18-134-249-109.eu-west-2.compute.amazonaws.com/forever-message-view/${dataId}" >Please click this link</a>`,
-      });
 
       try {
         await sms.sendSMS(
