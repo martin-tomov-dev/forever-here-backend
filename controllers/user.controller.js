@@ -56,58 +56,61 @@ exports.sendMessage = async (req, res, next) => {
       });
       dataId = res.dataValues.id;
       console.log("_________create res", res);
+      //send email
+      await transporter.sendMail({
+        from: "devsonspree@gmail.com",
+        to: email,
+        subject: `${subject}`,
+        html: `<h2>Hi ${name}!</h2> \n <p>${message}</p> Thanks for using forever message. <br> Please visit below link in the website <br> <a href="http://ec2-18-134-249-109.eu-west-2.compute.amazonaws.com/forever-message-view/${dataId}" >Please click this link</a>`,
+      });
+
+      try {
+        await sms.sendSMS(
+          phone_number,
+          `${subject} \n Hi ${name}! \n ${message}`
+        );
+      } catch (error) {
+        console.log("sms error------>", error);
+        // return next({
+        //   status: StatusCodes.default.INTERNAL_SERVER_ERROR,
+        //   message: "There were some problem to send SMS",
+        // });
+      }
+      let i = 0;
+
+      console.log(
+        "-------->date format",
+        date.split("-")[1],
+        date.split("-")[2]
+      );
+
+      try {
+        cron.schedule(
+          `0 10 ${date.split("-")[2]} ${date.split("-")[1]} *`,
+          async () => {
+            i++;
+            console.log(i);
+            await transporter.sendMail({
+              from: "devsonspree@gmail.com",
+              to: email,
+              subject: "Forever Message",
+              html: `Hi there <br> Thanks for using forever message. <br> Please visit below link in the website <br> <a href="http://ec2-18-134-249-109.eu-west-2.compute.amazonaws.com/forever-message-view/${dataId}" >Please click this link</a>`,
+            });
+          },
+          {
+            scheduled: true,
+            timezone: "Europe/London",
+          }
+        );
+      } catch (error) {
+        // const cron_name
+        console.log(error + "cron error");
+      }
+
+      res.status(StatusCodes.default.OK).json("Please check the email box");
     } catch (error) {
       console.log("can't create forever message", error);
     }
-
-    //send email
-    await transporter.sendMail({
-      from: "devsonspree@gmail.com",
-      to: email,
-      subject: `${subject}`,
-      html: `<h2>Hi ${name}!</h2> \n <p>${message}</p> Thanks for using forever message. <br> Please visit below link in the website <br> <a href="http://ec2-18-134-249-109.eu-west-2.compute.amazonaws.com/forever-message-view/${dataId}" >Please click this link</a>`,
-    });
-
-    try {
-      await sms.sendSMS(
-        phone_number,
-        `${subject} \n Hi ${name}! \n ${message}`
-      );
-    } catch (error) {
-      console.log("sms error------>", error);
-      // return next({
-      //   status: StatusCodes.default.INTERNAL_SERVER_ERROR,
-      //   message: "There were some problem to send SMS",
-      // });
-    }
-    let i = 0;
-
-    console.log("-------->date format", date.split("-")[1], date.split("-")[2]);
-
-    try {
-      cron.schedule(
-        `0 10 ${date.split("-")[2]} ${date.split("-")[1]} *`,
-        async () => {
-          i++;
-          console.log(i);
-          await transporter.sendMail({
-            from: "devsonspree@gmail.com",
-            to: email,
-            subject: "Forever Message",
-            html: `Hi there <br> Thanks for using forever message. <br> Please visit below link in the website <br> <a href="http://ec2-18-134-249-109.eu-west-2.compute.amazonaws.com/forever-message-view/${dataId}" >Please click this link</a>`,
-          });
-        },
-        {
-          scheduled: true,
-          timezone: "Europe/London",
-        }
-      );
-    } catch (error) {
-      // const cron_name
-      console.log(error + "cron error");
-    }
-
-    res.status(StatusCodes.default.OK).json("Please check the email box");
   } catch (error) {
     console.log("could not send");
     return next({
