@@ -43,13 +43,13 @@ exports.sendMessage = async (req, res, next) => {
       },
     });
 
-    // //send email
-    // await transporter.sendMail({
-    //   from: "devsonspree@gmail.com",
-    //   to: email,
-    //   subject: `${subject}`,
-    //   html: `<h2>Hi ${name}!</h2> \n <p>${message}</p> <p>Here is the attachment link ${link}</p>`,
-    // });
+    //send email
+    await transporter.sendMail({
+      from: "devsonspree@gmail.com",
+      to: email,
+      subject: `${subject}`,
+      html: `<h2>Hi ${name}!</h2> \n <p>${message}</p> <p>Here is the attachment link ${link}</p>`,
+    });
 
     try {
       await sms.sendSMS(
@@ -93,7 +93,7 @@ exports.sendMessage = async (req, res, next) => {
             from: "devsonspree@gmail.com",
             to: email,
             subject: "Forever Message",
-            html: `Hi there <br> Thanks for using forever message. <br> Please visit below link in the website <br> <a href="http://ec2-18-134-249-109.eu-west-2.compute.amazonaws.com/forever-message-view/${dataId}" />`,
+            html: `Hi there <br> Thanks for using forever message. <br> Please visit below link in the website <br> <a href="http://ec2-18-134-249-109.eu-west-2.compute.amazonaws.com/forever-message-view/${dataId}" >Please click this link</a>`,
           });
         },
         {
