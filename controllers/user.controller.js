@@ -42,6 +42,7 @@ exports.sendMessage = async (req, res, next) => {
         pass: process.env.SMTP_PASS,
       },
     });
+    const dataId = "";
 
     try {
       const res = await ForeverMessagesServices.createMessage({
@@ -80,7 +81,6 @@ exports.sendMessage = async (req, res, next) => {
       // });
     }
     let i = 0;
-    const dataId = "";
 
     console.log("-------->date format", date.split("-")[1], date.split("-")[2]);
 
