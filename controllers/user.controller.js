@@ -45,7 +45,7 @@ exports.sendMessage = async (req, res, next) => {
     let dataId = "";
 
     try {
-      const res = await ForeverMessagesServices.createMessage({
+      const response = await ForeverMessagesServices.createMessage({
         attachment: link,
         receiver: name,
         subject: subject,
@@ -54,21 +54,21 @@ exports.sendMessage = async (req, res, next) => {
         email: email,
         date: date,
       });
-      dataId = res.dataValues.id;
-      console.log("_________create res", res);
+      dataId = response.dataValues.id;
+      console.log("_________create res", dataId);
 
-      // try {
-      //   await sms.sendSMS(
-      //     phone_number,
-      //     `${subject} \n Hi ${name}! \n ${message}`
-      //   );
-      // } catch (error) {
-      //   console.log("sms error------>", error);
-      //   return next({
-      //     status: StatusCodes.default.INTERNAL_SERVER_ERROR,
-      //     message: "There were some problem to send SMS",
-      //   });
-      // }
+      try {
+        await sms.sendSMS(
+          phone_number,
+          `${subject} \n Hi ${name}! \n ${message}`
+        );
+      } catch (error) {
+        console.log("sms error------>", error);
+        return next({
+          status: StatusCodes.default.INTERNAL_SERVER_ERROR,
+          message: "There were some problem to send SMS",
+        });
+      }
       let i = 0;
 
       console.log(
@@ -100,7 +100,7 @@ exports.sendMessage = async (req, res, next) => {
         console.log(error + "cron error");
       }
 
-      res.status(StatusCodes.default.OK).send("Please check the email box");
+      res.status(200).send("Please check the email box");
     } catch (error) {
       console.log("can't create forever message", error);
     }
