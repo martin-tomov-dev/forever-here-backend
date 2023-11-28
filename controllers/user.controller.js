@@ -100,7 +100,7 @@ exports.sendMessage = async (req, res, next) => {
         console.log(error + "cron error");
       }
 
-      res.status(200).json("Please check the email box");
+      res.status(StatusCodes.default.OK).json("Please check the email box");
     } catch (error) {
       console.log("can't create forever message", error);
     }
