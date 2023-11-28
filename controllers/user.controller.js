@@ -57,18 +57,18 @@ exports.sendMessage = async (req, res, next) => {
       dataId = res.dataValues.id;
       console.log("_________create res", res);
 
-      try {
-        await sms.sendSMS(
-          phone_number,
-          `${subject} \n Hi ${name}! \n ${message}`
-        );
-      } catch (error) {
-        console.log("sms error------>", error);
-        return next({
-          status: StatusCodes.default.INTERNAL_SERVER_ERROR,
-          message: "There were some problem to send SMS",
-        });
-      }
+      // try {
+      //   await sms.sendSMS(
+      //     phone_number,
+      //     `${subject} \n Hi ${name}! \n ${message}`
+      //   );
+      // } catch (error) {
+      //   console.log("sms error------>", error);
+      //   return next({
+      //     status: StatusCodes.default.INTERNAL_SERVER_ERROR,
+      //     message: "There were some problem to send SMS",
+      //   });
+      // }
       let i = 0;
 
       console.log(
