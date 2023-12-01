@@ -59,7 +59,7 @@ exports.sendMessage = async (req, res, next) => {
 
       try {
         await sms.sendSMS(
-          phone_number,
+          phone_number.toString(),
           `${subject} \n Hi ${name}! \n ${message}`
         );
       } catch (error) {
@@ -70,13 +70,6 @@ exports.sendMessage = async (req, res, next) => {
         });
       }
       let i = 0;
-
-      console.log(
-        "-------->date format",
-        date.split("-")[1],
-        date.split("-")[2]
-      );
-
       try {
         cron.schedule(
           `0 10 ${date.split("-")[2]} ${date.split("-")[1]} *`,
