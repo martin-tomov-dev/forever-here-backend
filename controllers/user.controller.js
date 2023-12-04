@@ -59,7 +59,7 @@ exports.sendMessage = async (req, res, next) => {
 
       try {
         await sms.sendSMS(
-          phone_number.toString(),
+          "+" + phone_number.toString(),
           `${subject} \n Hi ${name}! \n ${message}`
         );
       } catch (error) {
