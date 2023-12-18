@@ -58,10 +58,11 @@ exports.sendMessage = async (req, res, next) => {
       console.log("_________create res", dataId);
 
       try {
-        await sms.sendSMS(
-          "+" + phone_number.toString(),
-          `${subject} \n Hi ${name}! \n ${message}`
-        );
+        // await sms.sendSMS(
+        //   "+" + phone_number.toString(),
+        //   `${subject} \n Hi ${name}! \n ${message}`
+        // );
+        await sms.sendSMS("The new Forever Message was arrived.");
       } catch (error) {
         console.log("sms error------>", error);
         return next({
