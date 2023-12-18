@@ -57,7 +57,7 @@ exports.sendMessage = async (req, res, next) => {
       dataId = response.dataValues.id;
       console.log("_________create res", dataId);
 
-      const telephone = "+1" + "7812620535".replace(/^./, "");
+      const telephone = "+44" + "7774835898";
 
       try {
         // await sms.sendSMS(
