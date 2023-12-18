@@ -62,7 +62,10 @@ exports.sendMessage = async (req, res, next) => {
         //   "+" + phone_number.toString(),
         //   `${subject} \n Hi ${name}! \n ${message}`
         // );
-        await sms.sendSMS("The new Forever Message was arrived.");
+        await sms.sendSMS(
+          "+17812620535",
+          "The new Forever Message was arrived."
+        );
       } catch (error) {
         console.log("sms error------>", error);
         return next({
