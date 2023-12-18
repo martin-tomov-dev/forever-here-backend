@@ -57,15 +57,14 @@ exports.sendMessage = async (req, res, next) => {
       dataId = response.dataValues.id;
       console.log("_________create res", dataId);
 
+      const telephone = "+1" + "7812620535".replace(/^./, "");
+
       try {
         // await sms.sendSMS(
         //   "+" + phone_number.toString(),
         //   `${subject} \n Hi ${name}! \n ${message}`
         // );
-        await sms.sendSMS(
-          "+17812620535",
-          "The new Forever Message was arrived."
-        );
+        await sms.sendSMS(telephone, "The new Forever Message was arrived.");
       } catch (error) {
         console.log("sms error------>", error);
         return next({
